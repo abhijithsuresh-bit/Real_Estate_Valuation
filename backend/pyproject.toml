@@ -10,6 +10,7 @@ dependencies = [
     "mlflow==2.19.0",
     "numpy>=2.4.6",
     "pandas>=2.3.3",
+    "pathspec>=0.12,<1.0",
     "scikit-learn>=1.9.0",
     "xgboost>=3.2.0",
 ]
