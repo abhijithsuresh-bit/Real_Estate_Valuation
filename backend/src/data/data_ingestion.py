@@ -53,7 +53,10 @@ def split_data(df , test_size, random_state):
     """"splitts the data into training and testing sets based on parameters defined in params.yaml"""
     try:
         X = df.drop(columns=['price'], axis=1)
-        y = df['price']
+        
+        y = np.log1p(df['price'])  # Log-transform the target variable to handle skewness
+        logging.info(f"Data split into features and target variable. Features shape: {X.shape}, Target shape: {y.shape}")
+
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
         logging.info(f"Data split into training and testing sets. Training shape: {X_train.shape}, Testing shape: {X_test.shape}")
         return X_train, X_test, y_train, y_test
@@ -70,6 +73,7 @@ def save_data(data , file_path):
     except Exception as e:
         logging.error(f"Error occurred while saving data: {e}")
         raise
+
 
 
 def main():

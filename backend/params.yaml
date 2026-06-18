@@ -1,3 +1,18 @@
 data_ingestion:
   test_size: 0.2
   random_state: 42
+
+model_training:
+  model_type: "XGBRegressor"
+  hyperparameters:
+    learning_rate : 0.031891902067390544
+    max_depth: 6
+    n_estimators: 622
+    subsample : 0.8439285193593584
+    colsample_bytree: 0.8627043072687647
+    min_child_weight: 10
+    reg_alpha: 0.23057917932895533
+    reg_lambda: 1.9522421408705726
+
+model_evaluation:
+  model_name: "XGBoost_Regressor"

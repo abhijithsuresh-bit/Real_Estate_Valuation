@@ -9,12 +9,12 @@ stages:
       size: 2515206
     - path: params.yaml
       hash: md5
-      md5: 910e47016719e3027af4718d427a1600
-      size: 53
+      md5: 1795320f1a1763b4461c478ae35581b0
+      size: 437
     - path: src/data/data_ingestion.py
       hash: md5
-      md5: 09c4fc7a54b23eedd66b0a27bb0b233a
-      size: 3525
+      md5: f5671d8bb761a3a37f71f023e49470c7
+      size: 3728
     outs:
     - path: data/processed/X_test.csv
       hash: md5
@@ -26,9 +26,100 @@ stages:
       size: 1340906
     - path: data/processed/y_test.csv
       hash: md5
-      md5: 20b80792d5f3d262e3001795303ee445
-      size: 43559
+      md5: b7b935c80ac98beeca5490f83b31ecef
+      size: 85656
     - path: data/processed/y_train.csv
       hash: md5
-      md5: 27eeb9d5b5fdac0561ac2992e6aeb495
-      size: 174052
+      md5: e0fc6fbabe2e7151f7375eabcbac223c
+      size: 342875
+  data_preprocessing:
+    cmd: python src/data/data_preprocessing.py
+    deps:
+    - path: data/processed/X_test.csv
+      hash: md5
+      md5: e59825d9a74fc8fa88d1ac6bedbbd584
+      size: 335760
+    - path: data/processed/X_train.csv
+      hash: md5
+      md5: 2cef545b5c10f063d1aec08dea579ca4
+      size: 1340906
+    - path: data/processed/y_test.csv
+      hash: md5
+      md5: b7b935c80ac98beeca5490f83b31ecef
+      size: 85656
+    - path: data/processed/y_train.csv
+      hash: md5
+      md5: e0fc6fbabe2e7151f7375eabcbac223c
+      size: 342875
+    - path: src/data/data_preprocessing.py
+      hash: md5
+      md5: 886dfc8456c7fb0f8b398d33e3bd30b4
+      size: 4812
+    outs:
+    - path: data/preprocessed/X_test_preprocessed.csv
+      hash: md5
+      md5: 671bc5524191e269ea7d9e7be05056ea
+      size: 532281
+    - path: data/preprocessed/X_train_preprocessed.csv
+      hash: md5
+      md5: f4e1881d1a384159748a0181e49b07a9
+      size: 2126912
+  model_training:
+    cmd: python src/model/model_building.py
+    deps:
+    - path: data/preprocessed/X_train_preprocessed.csv
+      hash: md5
+      md5: f4e1881d1a384159748a0181e49b07a9
+      size: 2126912
+    - path: data/processed/y_train.csv
+      hash: md5
+      md5: e0fc6fbabe2e7151f7375eabcbac223c
+      size: 342875
+    - path: params.yaml
+      hash: md5
+      md5: 1795320f1a1763b4461c478ae35581b0
+      size: 437
+    - path: src/model/model_building.py
+      hash: md5
+      md5: f8f64fb1eab55005d0c8ace3c43eed85
+      size: 2521
+    outs:
+    - path: models/xgb_model.pkl
+      hash: md5
+      md5: eb2ff8b9ec3654a40d6329bfad611670
+      size: 2224319
+  model_evaluation:
+    cmd: python src/model/model_evaluation.py
+    deps:
+    - path: data/preprocessed/X_test_preprocessed.csv
+      hash: md5
+      md5: 671bc5524191e269ea7d9e7be05056ea
+      size: 532281
+    - path: data/processed/y_test.csv
+      hash: md5
+      md5: b7b935c80ac98beeca5490f83b31ecef
+      size: 85656
+    - path: models/xgb_model.pkl
+      hash: md5
+      md5: eb2ff8b9ec3654a40d6329bfad611670
+      size: 2224319
+    - path: params.yaml
+      hash: md5
+      md5: 1795320f1a1763b4461c478ae35581b0
+      size: 437
+    - path: src/model/model_evaluation.py
+      hash: md5
+      md5: f485bb2817aedd7116691c5906139ce4
+      size: 6904
+    outs:
+    - path: mlflow_evaluation_results/mlflow_evaluation_results.json
+      hash: md5
+      md5: 8e04178142db6cc8b7d0fd5439577b9f
+      size: 327
+  register_model:
+    cmd: python src/model/register_model.py
+    deps:
+    - path: mlflow_evaluation_results/mlflow_evaluation_results.json
+      hash: md5
+      md5: 8e04178142db6cc8b7d0fd5439577b9f
+      size: 327

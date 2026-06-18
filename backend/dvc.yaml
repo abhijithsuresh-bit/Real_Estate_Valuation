@@ -10,4 +10,46 @@ stages:
       - data/processed/X_test.csv
       - data/processed/y_train.csv
       - data/processed/y_test.csv
-      
+
+  data_preprocessing:
+    cmd: python src/data/data_preprocessing.py
+    deps:
+      - src/data/data_preprocessing.py
+      - data/processed/X_train.csv
+      - data/processed/X_test.csv
+      - data/processed/y_train.csv
+      - data/processed/y_test.csv
+    outs:
+      - data/preprocessed/X_train_preprocessed.csv
+      - data/preprocessed/X_test_preprocessed.csv
+
+  model_training:
+    cmd: python src/model/model_building.py
+    deps:
+      - src/model/model_building.py
+      - data/preprocessed/X_train_preprocessed.csv
+      - data/processed/y_train.csv
+      - params.yaml
+    outs:
+      - models/xgb_model.pkl
+
+  model_evaluation:
+    cmd: python src/model/model_evaluation.py
+    deps:
+      - src/model/model_evaluation.py
+      - data/preprocessed/X_test_preprocessed.csv
+      - models/xgb_model.pkl
+      - data/processed/y_test.csv
+      - params.yaml
+    outs:
+      - mlflow_evaluation_results/mlflow_evaluation_results.json
+
+  register_model:
+    cmd: python src/model/register_model.py
+    deps:
+      - mlflow_evaluation_results/mlflow_evaluation_results.json
+
+
+
+
+
